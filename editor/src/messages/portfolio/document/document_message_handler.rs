@@ -101,6 +101,14 @@ pub struct DocumentMessageHandler {
 	pub overlays_visibility_settings: OverlaysVisibilitySettings,
 	/// Sets whether or not the rulers should be drawn along the top and left edges of the viewport area.
 	pub rulers_visible: bool,
+	/// Sets whether or not guidelines should be drawn and are interactive.
+	pub guidelines_visible: bool,
+	/// The list of guidelines in document space.
+	pub guidelines: Vec<Guideline>,
+	/// The current user choices for snapping behavior, including whether snapping is enabled at all.
+	pub snapping_state: SnappingState,
+	/// Sets whether or not the rulers should be drawn along the top and left edges of the viewport area.
+	pub rulers_visible: bool,
 	/// The current user choices for snapping behavior, including whether snapping is enabled at all.
 	pub snapping_state: SnappingState,
 	/// Sets whether or not the node graph is drawn (as an overlay) on top of the viewport area, or otherwise if it's hidden.

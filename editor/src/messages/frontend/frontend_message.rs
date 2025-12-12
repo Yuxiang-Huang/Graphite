@@ -228,6 +228,21 @@ pub enum FrontendMessage {
 		#[serde(rename = "dataBuffer")]
 		data_buffer: JsRawBuffer,
 	},
+	UpdateDocumentRulers {
+		origin: (f64, f64),
+		spacing: f64,
+		interval: f64,
+		visible: bool,
+	},
+	UpdateDocumentGuidelines {
+		guidelines: Vec<Guideline>,
+		visible: bool,
+	},
+	UpdateDocumentScrollbars {
+		position: (f64, f64),
+		size: (f64, f64),
+		multiplier: (f64, f64),
+	},
 	UpdateDocumentModeLayout {
 		#[serde(rename = "layoutTarget")]
 		layout_target: LayoutTarget,

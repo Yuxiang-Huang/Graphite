@@ -11,6 +11,7 @@
 		TriggerTextCommit,
 		UpdateDocumentArtwork,
 		UpdateDocumentRulers,
+		UpdateDocumentGuidelines,
 		UpdateDocumentScrollbars,
 		UpdateEyedropperSamplingState,
 		UpdateMouseCursor,
@@ -53,6 +54,10 @@
 	let rulerSpacing = 100;
 	let rulerInterval = 100;
 	let rulersVisible = true;
+
+	//Guidlines
+	let guidelines: Array<{ position: number; orientation: "Horizontal" | "Vertical"; id: number }> = [];
+	let guidelinesVisible = true;
 
 	// Rendered SVG viewport data
 	let artworkSvg = "";
@@ -295,6 +300,10 @@
 		rulerInterval = interval;
 		rulersVisible = visible;
 	}
+	export function updateDocumentGuidelines(guidelineData: Array<{ position: number; orientation: "Horizontal" | "Vertical"; id: number }>, visible: boolean) {
+		guidelines = guidelineData;
+		guidelinesVisible = visible;
+	}
 
 	// Update mouse cursor icon
 	export function updateMouseCursor(cursor: MouseCursorIcon) {
@@ -457,6 +466,12 @@
 			const { origin, spacing, interval, visible } = data;
 			updateDocumentRulers(origin, spacing, interval, visible);
 		});
+		editor.subscriptions.subscribeJsMessage(UpdateDocumentGuidelines, async (data) => {
+			await tick();
+
+			const { guidelines: guidelineData, visible } = data;
+			updateDocumentGuidelines(guidelineData, visible);
+		});
 
 		// Update mouse cursor icon
 		editor.subscriptions.subscribeJsMessage(UpdateMouseCursor, async (data) => {
@@ -570,6 +585,17 @@
 							<svg class="artboards" style:width={canvasWidthCSS} style:height={canvasHeightCSS}>
 								{@html artworkSvg}
 							</svg>
+						{/if}
+						{#if guidelinesVisible && guidelines.length > 0}
+							<div class="guidelines-layer">
+								{#each guidelines as guideline (guideline.id)}
+									<div
+										class="guideline {guideline.orientation.toLowerCase()}"
+										style:top={guideline.orientation === "Horizontal" ? `${guideline.position}px` : "0"}
+										style:left={guideline.orientation === "Vertical" ? `${guideline.position}px` : "0"}
+									></div>
+								{/each}
+							</div>
 						{/if}
 						<div class="text-input" style:width={canvasWidthCSS} style:height={canvasHeightCSS} style:pointer-events={showTextInput ? "auto" : ""}>
 							{#if showTextInput}
@@ -815,6 +841,31 @@
 							// Prevent inheritance from reaching the child elements
 							> * {
 								pointer-events: auto;
+							}
+						}
+						.guidelines-layer {
+							position: absolute;
+							top: 0;
+							left: 0;
+							right: 0;
+							bottom: 0;
+							pointer-events: none;
+							z-index: 5;
+
+							.guideline {
+								position: absolute;
+								pointer-events: auto;
+								&.horizontal {
+									width: 100%;
+									height: 1px;
+									background-color: var(--color-accent-cyan);
+								}
+
+								&.vertical {
+									width: 1px;
+									height: 100%;
+									background-color: var(--color-accent-cyan);
+								}
 							}
 						}
 

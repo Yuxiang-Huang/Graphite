@@ -26,6 +26,25 @@ pub enum AlignAggregate {
 	Center,
 }
 
+#[derive(PartialEq, Eq, Clone, Copy, Debug, serde::Serialize, serde::Deserialize, Hash, specta::Type)]
+pub enum AlignAxis {
+	X,
+	Y,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, serde::Serialize, serde::Deserialize, specta::Type)]
+pub struct Guideline {
+	pub position: f64,
+	pub orientation: GuidelineOrientation,
+	pub id: u64,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, serde::Serialize, serde::Deserialize, specta::Type)]
+pub enum GuidelineOrientation {
+	Horizontal,
+	Vertical,
+}
+
 #[derive(Default, PartialEq, Eq, Clone, Copy, Debug, serde::Serialize, serde::Deserialize)]
 pub enum DocumentMode {
 	#[default]
